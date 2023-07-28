@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shop_app/screens/products_overview_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -6,29 +7,28 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: const ColorScheme(
+          brightness: Brightness.light,
+          surface:Colors.white,
+          onSurface: Colors.black,
+          onPrimary: Colors.purple,
+          error: Colors.red,
+          onError: Colors.red,
+          onBackground:Colors.white,
+          background:Colors.white ,
+          primary: Colors.purple,
+          secondary: Colors.deepOrange,
+          onSecondary: Colors.deepOrange,
+        ),
         useMaterial3: true,
       ),
-      home: MyHomePage(),
+      home: ProductsOverviewScreen(),
     );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('MyShop'),
-        ),
-        body: const Center(child: Text('Let\'s build a shop')));
   }
 }
