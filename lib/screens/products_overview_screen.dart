@@ -1,60 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shop_app/models/product.dart';
+import 'package:flutter_shop_app/providers/product.dart';
 import 'package:flutter_shop_app/widgets/product_item.dart';
+import 'package:provider/provider.dart';
+import '../widgets/products_grid.dart';
+import '../providers/products.dart';
 
-class ProductsOverviewScreen extends StatelessWidget {
-  final List<Product> loadedProducts = [
-    Product(
-      id: 'p1',
-      description: 'Red Shirt',
-      title: ' A red shirt - it is pretty red!',
-      price: 29.99,
-      imageUrl:
-          'https://cdn.pixabay.com/photo/2013/07/13/14/08/apparel-162192_1280.png',
-    ),
-    Product(
-      id: 'p2',
-      description: 'Red Shirt',
-      title: ' A red shirt - it is pretty red!',
-      price: 29.99,
-      imageUrl:
-          'https://cdn.pixabay.com/photo/2013/07/13/14/08/apparel-162192_1280.png',
-    ),
-    Product(
-      id: 'p3',
-      description: 'Red Shirt',
-      title: ' A red shirt - it is pretty red!',
-      price: 29.99,
-      imageUrl:
-          'https://cdn.pixabay.com/photo/2013/07/13/14/08/apparel-162192_1280.png',
-    ),
-    Product(
-      id: 'p5',
-      description: 'Red Shirt',
-      title: ' A red shirt - it is pretty red!',
-      price: 29.99,
-      imageUrl:
-          'https://cdn.pixabay.com/photo/2013/07/13/14/08/apparel-162192_1280.png',
-    ),
-  ];
- ProductsOverviewScreen({super.key});
+enum FilterOptions { Favorites, All }
+
+class ProductsOverviewScreen extends StatefulWidget {
+  ProductsOverviewScreen({super.key});
 
   @override
+  State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
+}
+
+class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
+  var _showOnlyFavorites = false;
+  @override
   Widget build(BuildContext context) {
+    final productsContainer = Provider.of<Products>(context, listen: false);
     return Scaffold(
-      appBar: AppBar(
-        title:Text("My Shop")
-      ),
-      body:GridView.builder(
-        padding:const EdgeInsets.all(10.0),
-        itemCount: loadedProducts.length,
-        itemBuilder: (ctx, i) => ProductItem(
-          loadedProducts[i].id,
-          loadedProducts[i].title,
-          loadedProducts[i].imageUrl,
+        appBar: AppBar(
+          title: Text("My Shop"),
+          actions: [
+            PopupMenuButton(
+                onSelected: (FilterOptions selectedValue) {
+                 setState(() {
+                    if (selectedValue == FilterOptions.Favorites) {
+                      _showOnlyFavorites = true;
+                    } else {
+                      _showOnlyFavorites = false;
+                    }
+                 });
+                },
+                icon: Icon(Icons.more_vert),
+                itemBuilder: (_) => [
+                      PopupMenuItem(
+                        child: Text('My favorites'),
+                        value: FilterOptions.Favorites,
+                      ),
+                      PopupMenuItem(
+                        child: Text('Show All'),
+                        value: FilterOptions.All,
+                      )
+                    ])
+          ],
         ),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 3 / 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
-      )
-    );
+        body: ProductsGrid(_showOnlyFavorites));
   }
 }
